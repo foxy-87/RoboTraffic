@@ -11,6 +11,10 @@ Servo servo2;
 Octoliner octoliner_left(44);
 Octoliner octoliner_right(43);
 
+#define realy_pin 36;
+#define turn_signalR 37;
+#define turn_signalL 38;
+
 void setup() {
   lcd.init();             
   lcd.backlight();
@@ -24,10 +28,15 @@ void setup() {
   octoliner_right.setSensitivity(200);
   octoliner_left.setBrightness(255);
   octoliner_right.setBrightness(255);
+  pinMode(realy_pin, OUTPUT);
+  pinMode(turn_signalL, OUTPUT);
+  pinMode(turn_signalR, OUTPUT);
 }
 
 void loop() {
-  int a = 0;
+  digitalWrite(realy_pin, HIGH);
+  digitalWrite(turn_signalL, LOW);
+  digitalWrite(turn_signalR, LOW);
   int linesensor_1 = octoliner_left.analogRead(0);
   int linesensor_2 = octoliner_left.analogRead(1);
   int linesensor_3 = octoliner_left.analogRead(2);
@@ -48,6 +57,7 @@ void loop() {
   lcd.clear();
   
   if(linesensor_1 > 3800){
+    digitalWrite(turn_signalL, HIGH);
     servo1.write(35);
     servo2.write(105);
     lcd.setCursor(2,1);
@@ -123,16 +133,18 @@ void loop() {
     lcd.setCursor(16,1);
     lcd.print("\15");
   }else if(linesensor_16 > 3800){
+    digitalWrite(turn_signalR, HIGH);
     servo1.write(145);
     servo2.write(105);
     lcd.setCursor(17,1);
     lcd.print("\16");
-  }/*else{
-    while(a < 10){
-      a = a + 1;
-      servo1.write(90);
-      servo2.write(45);
-    }
-    a = 0;
-  }*/
+  }else{
+    digitalWrite(realy_pin, LOW);
+    delay(50);
+    digitalWrite(realy_pin, HIGH);
+    servo1.write(90);
+    servo2.write(105);
+    lcd.setCursor(6,1);
+    lcd.print("Go back");
+  }
 }
