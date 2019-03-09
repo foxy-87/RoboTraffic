@@ -73,7 +73,7 @@ void loop() {
     while(millis()-qtime < 2000){
     digitalWrite(Y,1);
     digitalWrite(G,0);
-    Serial.write(0x0414);
+    Serial.write(0x04);
     delay(50);
   }
 }
